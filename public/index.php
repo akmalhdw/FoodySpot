@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Http\Kernel;
 
 define('LARAVEL_START', microtime(true));
 
@@ -19,10 +20,12 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 $app->useStoragePath('/tmp');
 // ----------------------------------------------
 
-$handle = $app->make(Request::class);
+// Ambil instance Kernel HTTP Laravel secara resmi
+$kernel = $app->make(Kernel::class);
 
-$response = $handle->handle(
+// Tangkap request dan kirim response
+$response = $kernel->handle(
     $request = Request::capture()
 )->send();
 
-$handle->terminate($request, $response);
+$kernel->terminate($request, $response);
